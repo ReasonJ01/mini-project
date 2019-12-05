@@ -10,7 +10,7 @@ app.config["MONGO_URI"] = "mongodb://localhost:27017/movies"
 mongo = PyMongo(app)
 
 
-@app.route('/movie', methods=['POST'])
+@app.route('/movie', methods=['POST','GET'])
 def movie():
     comic_id = request.form['comic_id']
     r = requests.get("http://xkcd.com/"+comic_id+"/info.0.json")
@@ -22,45 +22,37 @@ def movie():
     day = json_object['day']
     month = json_object['month']
     year = json_object['year']
-
+    num = json_object['num']
     date = day+'/'+month+'/'+year
 
 
 
     #return a
     #return str(items)
-    return render_template('movie.html', title=title, img=img, date=date, alt=alt)
+    return render_template('movie.html', num=num, title=title, img=img, date=date, alt=alt)
 
-@app.route('/info', defaults={'id': 'tt4654462'})
-@app.route('/info/<id>', methods=['POST','GET'])
-def info(id):
-    apikey = '6f6c977'
-    imdb_search = id
-    r = requests.get('http://www.omdbapi.com/?apikey='+apikey+'&i='+imdb_search)
+@app.route('/save')
+@app.route('/save/<num>', methods=['POST','GET'])
+def info(num):
+    comic_id = num
+    r = requests.get("http://xkcd.com/"+comic_id+"/info.0.json")
     json_object = r.json()
 
-    poster = json_object['Poster']
-    title = json_object['Title']
-    rated = json_object['Rated']
-    director = json_object['Director']
-    runtime = json_object['Runtime']
-    plot = json_object['Plot']
-    released = json_object['Released']
-    watched = 'false'
-
-    ratings = json_object['Ratings']
-
-    for rating in ratings:
-        source = rating['Source']
-        value = rating['Value']
+    title = json_object['title']
+    img = json_object['img']
+    alt = json_object['alt']
+    day = json_object['day']
+    month = json_object['month']
+    year = json_object['year']
+    num = json_object['num']
 
     if request.method == 'POST':
-        fav = mongo.db.userMovies.insert({'_id': id, 'title': title, 'rated': rated, 'poster': poster, 'watched': watched})
-        resp = 'Added to Favourites'
+        fav = mongo.db.savedComics.insert({'num' : num, 'title': title, 'img' : img, 'day' : day, 'month' : month, 'year' : year})
+        resp = 'Comic added to saved list'
         return resp
 
     #return json_object
-    return render_template('info.html', id=id, ratings=ratings, poster=poster, title=title, rated=rated, director=director, runtime=runtime, plot=plot, released=released)
+    return render_template('info.html', num=num, title=title, img=img, day=day, month=month, year=year, alt=alt)
 
 
 @app.route('/delete/<id>', methods=['POST'])

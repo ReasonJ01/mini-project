@@ -17,6 +17,7 @@
 			<th>Title</th>
 			<th>Alt</th>
 			<th>Date</th>
+			<th>Comic Number</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -25,7 +26,9 @@
 				<td><h1> {{ title }} </h1></td>
 				<td><h1> {{ alt }} </h1></td>
 				<td><h1> {{ date }} </h1></td>
-				<td><a class="button is-link" href="">Save for later</a></td>
+				<td><h1> {{ num }} </h1></td>
+				<td>
+					<form method="POST" action="/save/{{num}}"><button class="button is-primary">Save</button></form></td>
 			</tr>
 		</tbody>
 	</table>
