@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import requests
-
+import json
 
 app = Flask(__name__)
 app.secret_key = "secret key"
@@ -12,22 +12,24 @@ mongo = PyMongo(app)
 
 @app.route('/movie', methods=['POST'])
 def movie():
-    apikey = '6f6c977'
-    title_search = request.form['title_search']
-    r = requests.get('http://www.omdbapi.com/?apikey='+apikey+'&s='+title_search)
+    comic_id = request.form['comic_id']
+    r = requests.get("http://xkcd.com/"+comic_id+"/info.0.json")
     json_object = r.json()
 
-    items = json_object['Search']
+    title = json_object['title']
+    img = json_object['img']
+    alt = json_object['alt']
+    day = json_object['day']
+    month = json_object['month']
+    year = json_object['year']
 
-    for item in items:
-        title = item['Title']
-        year = item['Year']
-        poster = item['Poster']
-        imdbID = item['imdbID']
+    date = day+'/'+month+'/'+year
 
-    #return json_object
+
+
+    #return a
     #return str(items)
-    return render_template('movie.html', items=items)
+    return render_template('movie.html', title=title, img=img, date=date, alt=alt)
 
 @app.route('/info', defaults={'id': 'tt4654462'})
 @app.route('/info/<id>', methods=['POST','GET'])
