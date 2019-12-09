@@ -13,31 +13,36 @@
       <table class="table is-bordered">
   		<thead>
 		<tr>
-			<th>Poster</th>
+			<th>Comic</th>
 			<th>Title</th>
-			<th>Year</th>
+			<th>Alt</th>
+			<th>Comic Number</th>
+			<th>Date</th>
 			<th>Remove</th>
-			<th>Watched</th>
+			<th>Mark as Read</th>
 		</tr>
 		</thead>
 		<tbody>
-		{% for item in favMovies %}
+		{% for item in favComics %}
 			<tr>
-				<td><img src="{{ item.poster }}" width=100px; height=150px;></img></td>
+				<td><a href='{{item.img}}'><img src="{{ item.img }}" width=2000px; height=2000px;></img></a></td>
 				<td><h1> {{ item.title }} </h1></td>
-				<td><h2> {{ item.rated }}</h2></td>
+				<td><h2> {{ item.alt }}</h2></td>
+				<td><h2> {{ item.num }}</h2></td>
+				<td><h2>{{item.date}}</h2></td>
+
 				<td>
-					<form method="POST" action="/delete/{{item._id}}">
+					<form method="POST" action="/delete/{{item.num}}">
 						<button class="button is-danger">Remove</button>
 					</form>
 				</td>
 				<td>
 					{% if item.watched == 'true' %}
-    					 <form method="POST" action="/unwatched/{{item._id}}">
-						<button class="button is-success">Unwatched</button>
+    					 <form method="POST" action="/unwatched/{{item.num}}">
+						<button class="button is-success">Unread</button>
 					{% else %}
-    					 <form method="POST" action="/watched/{{item._id}}">
-						<button class="button is-success">Watched</button>
+    					 <form method="POST" action="/watched/{{item.num}}">
+						<button class="button is-success">Read</button>
 					{% endif %}
 					</form>
 				</td>
