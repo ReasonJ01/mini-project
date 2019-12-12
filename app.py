@@ -43,10 +43,11 @@ def save(num):
     year = json_object['year']
     num = json_object['num']
     date = day+'/'+month+'/'+year
+    read = 'false'
 
 
     if request.method == 'POST':
-        fav = mongo.db.userComics.insert({'num': num, 'title': title, 'img': img, 'alt': alt, 'day': day, 'month': month, 'year': year, 'date': date})
+        fav = mongo.db.userComics.insert({'num': num, 'title': title, 'img': img, 'alt': alt, 'day': day, 'month': month, 'year': year, 'date': date, 'read': read})
         resp = 'Added to Favourites'
         return resp
 
@@ -56,9 +57,9 @@ def save(num):
 
 @app.route('/delete/<num>', methods=['POST'])
 def delete_movie(num):
-    mongo.db.userComics.delete_one({'num': num})
-    resp = 'Comic removed successfully!'
-    return userFavs()
+    id = num + 'id'
+    mongo.db.userMovies.delete_one({'num': num})
+    return num
 
 @app.route('/userComics',)
 def userFavs():
@@ -73,8 +74,7 @@ def index():
 
 @app.route('/watched/<num>', methods=['POST'])
 def watched_movie(num):
-    mongo.db.userComics.update({'num': num}, {"$set": {"read": "true"}})
-    mongo.db.userComics.find().sort("watched", 1)
+    mongo.db.userComics.update_one({'num': num}, {"$set": {"read": "true"}})
     resp = 'Comic set to read successfully!'
     return userFavs()
 
@@ -82,8 +82,7 @@ def watched_movie(num):
 
 @app.route('/unwatched/<num>', methods=['POST'])
 def unwatched_movie(num):
-    mongo.db.userComics.update({'num': num}, {"$set": {"watched": "false"}})
-    mongo.db.userComics.find().sort("watched", 1)
+    mongo.db.userComics.update_one({'num': num}, {"$set": {"read": "false"}})
     resp = 'Comic set to unread successfully!'
     return userFavs()
 

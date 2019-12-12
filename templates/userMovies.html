@@ -37,7 +37,7 @@
 					</form>
 				</td>
 				<td>
-					{% if item.watched == 'true' %}
+					{% if item.read == 'true' %}
     					 <form method="POST" action="/unwatched/{{item.num}}">
 						<button class="button is-success">Unread</button>
 					{% else %}
