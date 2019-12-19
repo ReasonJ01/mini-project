@@ -10,7 +10,7 @@ app.secret_key = "secret key"
 app.config["MONGO_URI"] = "mongodb://localhost:27017/comics"
 mongo = PyMongo(app)
 
-@app.route('/info', methods=['POST'])
+@app.route('/info', methods=['GET', 'POST'])
 def info():
     comic_id = request.form['comic_id']
     r = requests.get("http://xkcd.com/" + comic_id + "/info.0.json")
